@@ -1,0 +1,26 @@
+
+import sqlite3
+
+stationFile = open('/home/egor/pythonProject/radioOnline/Stations_utf.txt')
+con = sqlite3.connect('/home/egor/pythonProject/radioOnline/test.db')
+cur = con.cursor()
+cur.execute('CREATE TABLE stations (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,name STRING ,adress STRING)')
+stationName = []
+stationAdress = []
+i = 0
+for line in stationFile:
+    line.replace('\'','')
+    line.replace('"','')
+    lineList = line.split('|')
+    stationName.append(lineList[1])
+    stationAdress.append(lineList[2])
+    print stationName[-1],stationAdress[-1]
+    cur.execute("INSERT INTO stations (name,adress) VALUES ( '%s' , \"%s\");"%(stationName[-1],stationAdress[-1]))
+    i += 1
+    
+    
+con.commit()
+cur.execute('SELECT * FROM stations')
+for i in xrange(10):
+    data =  cur.fetchone()
+    print data[0][1]
